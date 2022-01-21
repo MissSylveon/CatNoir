@@ -243,11 +243,10 @@ def start(update: Update, context: CallbackContext):
         else:
             update.effective_message.reply_photo(
                 random.choice(MEOW_PIC),
-                PM_START_TEXT.format(
-                escape_markdown(first_name),
+                PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
-                timeout=60
+                timeout=60,
             )
     else:
         first_name = update.effective_user.first_name
