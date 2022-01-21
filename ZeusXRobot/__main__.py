@@ -79,21 +79,17 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = """
-──『[GOD OF THUNDER](https://telegra.ph/file/4c33a90f7df190fd81763.jpg)』──
-
-*Hello User!!*
-𝐇𝐞𝐲 𝐈'𝐦 [๖ۣۜZΞUS༻](https://en.m.wikipedia.org/wiki/Zeus),👋
-𝐈 𝐀𝐦 𝐀 𝐆𝐫𝐞𝐞𝐤 𝐌𝐲𝐭𝐡𝐨𝐥𝐨𝐠𝐲 𝐆𝐨𝐝 
-𝐀𝐝𝐝 𝐌𝐞 𝐓𝐨 𝐘𝐨𝐮𝐫 𝐆𝐫𝐨𝐮𝐩 𝐈 𝐖𝐢𝐥𝐥 𝐃𝐞𝐬𝐭𝐫𝐨𝐲 𝐄𝐯𝐢𝐥𝐬 𝐖𝐢𝐭𝐡 𝐌𝐲 𝐓𝐡𝐮𝐧𝐝𝐞𝐫...
-
-──『*ᴛʜᴀɴᴋs  ғᴏʀ  ᴜsɪɴɢ*』"""
-MEOW_PIC = (
-"https://telegra.ph//file/2697ef6d5c4b344d2873d.jpg",
-"https://telegra.ph//file/16975c2580a14ae86fb80.jpg",
-"https://telegra.ph//file/adf0debb7f49ee82cc3a3.jpg",
-"https://telegra.ph//file/937d36ca44ef3e9b612e3.jpg",
-"https://telegra.ph//file/120d21e3df580c637545b.jpg",
-"https://telegra.ph//file/981bddd22362894ddd136.jpg", )
+─►❰CᴀᴛNᴏɪʀ❱◄─
+Hɪ ! { },
+𝙸 𝚊𝚖 𝙲𝚊𝚝𝙽𝚘𝚒𝚛 𝙰 𝙰𝚠𝚎𝚜𝚘𝚖𝚎 𝚐𝚛𝚘𝚞𝚙 𝚖𝚊𝚗𝚊𝚐𝚎𝚛 𝚗𝚒𝚌𝚎 𝚝𝚘 𝚖𝚎𝚎𝚝 𝚢𝚘𝚞
+┏━━━━━━━━━━━━━━━━━━┓
+┃ ➥ᴄᴏɴᴛᴀᴄᴛ ᴍʏ [ᴍᴀsᴛᴇʀ](t.me/Aryanjawale) ғᴏʀ
+┃ᴀɴʏ ǫᴜᴇʀʏ ᴀɴᴅ [Sᴜᴘᴘᴏʀᴛ](t.me/trainer_zone) ʜᴇʀᴇ
+┃⇛Uptime: { }
+┃⇛{ } users,
+┃⇛Across { } chats.
+┗━━━━━━━━━━━━━━━━━━┛
+➾  Tʀʏ Tᕼᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Pᴏᴡᴇʀs∘∘∘ """
 
 buttons = [
     [
@@ -138,7 +134,13 @@ List of all the Modules:
 HELP_MSG = "Click the button below to get help manu in your pm."
 DONATE_STRING = """t.me/unitedsupport"""
 HELP_IMG= "https://telegra.ph/file/5f296f959250d7cd88b09.jpg"
-
+MEOW_PIC = (
+"https://telegra.ph//file/2697ef6d5c4b344d2873d.jpg",
+"https://telegra.ph//file/16975c2580a14ae86fb80.jpg",
+"https://telegra.ph//file/adf0debb7f49ee82cc3a3.jpg",
+"https://telegra.ph//file/937d36ca44ef3e9b612e3.jpg",
+"https://telegra.ph//file/120d21e3df580c637545b.jpg",
+"https://telegra.ph//file/981bddd22362894ddd136.jpg", )
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -239,16 +241,14 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-            update.effective_message.reply_sticker(
-                random.choice(STICKERS),
-                timeout=60,
-            )
             update.effective_message.reply_photo(
                 random.choice(MEOW_PIC),
-                caption = PM_START_TEXT,
-                reply_markup=InlineKeyboardMarkup(buttons),
+                PM_START_TEXT.format(
+                escape_markdown(first_name),
                 parse_mode=ParseMode.MARKDOWN,
-                timeout=60,
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup(buttons),
+                 timeout=60,   
             )
     else:
         first_name = update.effective_user.first_name
