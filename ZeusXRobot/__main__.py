@@ -87,10 +87,13 @@ PM_START_TEXT = """
 𝐀𝐝𝐝 𝐌𝐞 𝐓𝐨 𝐘𝐨𝐮𝐫 𝐆𝐫𝐨𝐮𝐩 𝐈 𝐖𝐢𝐥𝐥 𝐃𝐞𝐬𝐭𝐫𝐨𝐲 𝐄𝐯𝐢𝐥𝐬 𝐖𝐢𝐭𝐡 𝐌𝐲 𝐓𝐡𝐮𝐧𝐝𝐞𝐫...
 
 ──『*ᴛʜᴀɴᴋs  ғᴏʀ  ᴜsɪɴɢ*』"""
-STICKERS = (
-      "CAACAgUAAx0CRiLf0wACvWBhmnKjHrrDcVgz6Ssk5wvA05NLDQACbgIAAv_H2FQTHfy_9X7rfSIE", #1
-      "CAACAgUAAx0CRiLf0wACvWZhmnOJLucdVwga5fnQJ0i7tD6nIgACsAQAAq042VQYQWM0cthfbyIE", #2
-)
+MEOW_PIC = (
+"https://telegra.ph//file/2697ef6d5c4b344d2873d.jpg",
+"https://telegra.ph//file/16975c2580a14ae86fb80.jpg",
+"https://telegra.ph//file/adf0debb7f49ee82cc3a3.jpg",
+"https://telegra.ph//file/937d36ca44ef3e9b612e3.jpg",
+"https://telegra.ph//file/120d21e3df580c637545b.jpg",
+"https://telegra.ph//file/981bddd22362894ddd136.jpg", )
 
 buttons = [
     [
@@ -240,8 +243,9 @@ def start(update: Update, context: CallbackContext):
                 random.choice(STICKERS),
                 timeout=60,
             )
-            update.effective_message.reply_text(
-                PM_START_TEXT,
+            update.effective_message.reply_photo(
+                random.choice(MEOW_PIC),
+                caption = PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
@@ -712,7 +716,7 @@ def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","*Zeus Is Ready ⚡*", parse_mode=ParseMode.MARKDOWN) 
+            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","*PLAGG, claws out!*", parse_mode=ParseMode.MARKDOWN) 
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!",
