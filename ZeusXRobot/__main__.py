@@ -5,6 +5,7 @@ import re
 from sys import argv
 from typing import Optional
 from platform import python_version #ZeusXRobot
+import ZeusXRobot.modules.sql.users_sql as sql
 
 from ZeusXRobot import (
     ALLOW_EXCL,
@@ -79,7 +80,7 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = """
-─►❰CᴀᴛNᴏɪʀ❱◄─
+─►❰ {} ❱◄─
 Hɪ ! { },
 𝙸 𝚊𝚖 𝙲𝚊𝚝𝙽𝚘𝚒𝚛 𝙰 𝙰𝚠𝚎𝚜𝚘𝚖𝚎 𝚐𝚛𝚘𝚞𝚙 𝚖𝚊𝚗𝚊𝚐𝚎𝚛 𝚗𝚒𝚌𝚎 𝚝𝚘 𝚖𝚎𝚎𝚝 𝚢𝚘𝚞
 ┏━━━━━━━━━━━━━━━━━━┓
@@ -243,10 +244,12 @@ def start(update: Update, context: CallbackContext):
         else:
             update.effective_message.reply_photo(
                 random.choice(MEOW_PIC),
-                PM_START_TEXT,
-                reply_markup=InlineKeyboardMarkup(buttons),
-                parse_mode=ParseMode.MARKDOWN,
-                timeout=60,
+                PM_START_TEXT.format(
+                    escape_markdown(context.bot.first_name),
+                    escape_markdown(first_name),
+                    escape_markdown(uptime),
+                    sql.num_users(),
+                    sql.num_chats()),
             )
     else:
         first_name = update.effective_user.first_name
