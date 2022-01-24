@@ -1,42 +1,34 @@
-import html
-import os
-import json
 import importlib
 import time
 import random
 import re
-import sys
-import traceback
-import ZeusxRobot.modules.sql.users_sql as sql
 from sys import argv
 from typing import Optional
-from telegram import __version__ as peler
-from platform import python_version as memek
-from ZeusxRobot import (
+from platform import python_version #ZeusXRobot
+
+from ZeusXRobot import (
     ALLOW_EXCL,
     CERT_PATH,
     DONATION_LINK,
     LOGGER,
     OWNER_ID,
     PORT,
-    SUPPORT_CHAT,
     TOKEN,
     URL,
     WEBHOOK,
-    SUPPORT_CHAT,
+    SUPPORT_CHAT, UPDATES_CHANNEL,
     dispatcher,
     StartTime,
     telethn,
-    pbot,
-    updater,
-)
+    updater)
 
 # needed to dynamically load modules
 # NOTE: Module order is not guaranteed, specify that in the config file!
-from ZeusxRobot.modules import ALL_MODULES
-from ZeusxRobot.modules.helper_funcs.chat_status import is_user_admin
-from ZeusxRobot.modules.helper_funcs.misc import paginate_modules
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
+from ZeusXRobot.modules import ALL_MODULES
+from ZeusXRobot.modules.helper_funcs.chat_status import is_user_admin
+from ZeusXRobot.modules.helper_funcs.misc import paginate_modules
+from ZeusXRobot.modules.disable import DisableAbleCommandHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update, __version__ as ptbver
 from telegram.error import (
     BadRequest,
     ChatMigrated,
@@ -56,6 +48,7 @@ from telegram.ext.dispatcher import DispatcherHandlerStop, run_async
 from telegram.utils.helpers import escape_markdown
 
 
+
 def get_readable_time(seconds: int) -> str:
     count = 0
     ping_time = ""
@@ -64,7 +57,10 @@ def get_readable_time(seconds: int) -> str:
 
     while count < 4:
         count += 1
-        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
+        if count < 3:
+            remainder, result = divmod(seconds, 60)
+        else:
+            remainder, result = divmod(seconds, 24)
         if seconds == 0 and remainder == 0:
             break
         time_list.append(int(result))
@@ -81,72 +77,78 @@ def get_readable_time(seconds: int) -> str:
     return ping_time
 
 
+
 PM_START_TEXT = """
-─►❰{ }❱◄─
-Hɪ ! { },
+─►❰CᴀᴛNᴏɪʀ❱◄─
+Hɪ ! Tʜᴇʀᴇ,
 𝙸 𝚊𝚖 𝙲𝚊𝚝𝙽𝚘𝚒𝚛 𝙰 𝙰𝚠𝚎𝚜𝚘𝚖𝚎 𝚐𝚛𝚘𝚞𝚙 𝚖𝚊𝚗𝚊𝚐𝚎𝚛 𝚗𝚒𝚌𝚎 𝚝𝚘 𝚖𝚎𝚎𝚝 𝚢𝚘𝚞
 ┏━━━━━━━━━━━━━━━━━━┓
-┃ ➥ᴄᴏɴᴛᴀᴄᴛ ᴍʏ [ᴍᴀsᴛᴇʀ](t.me/Aryanjawale) ғᴏʀ
-┃ᴀɴʏ ǫᴜᴇʀʏ ᴀɴᴅ [Sᴜᴘᴘᴏʀᴛ](t.me/trainer_zone) ʜᴇʀᴇ
-┃⇛Uptime: { }
-┃⇛{ } users,
-┃⇛Across { } chats.
+┃ ➥ᴄᴏɴᴛᴀᴄᴛ ᴍʏ ᴍᴀsᴛᴇʀ ғᴏʀ
+┃ᴀɴʏ ǫᴜᴇʀʏ ᴀɴᴅ Sᴜᴘᴘᴏʀᴛ ʜᴇʀᴇ
+┃
+┃➥Cʜᴇᴄᴋ Mʏ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs ┃ᴀɴᴅ Mᴀᴋᴇ Yᴏᴜ Gʀᴏᴜᴘ sᴜᴘᴇʀ ┃Fᴀɴᴛᴀsᴛɪᴄ
 ┗━━━━━━━━━━━━━━━━━━┛
-➾  Tʀʏ Tᕼᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Pᴏᴡᴇʀs∘∘∘
-"""
-MEOW_PIC = (
-"https://telegra.ph//file/2697ef6d5c4b344d2873d.jpg",
-"https://telegra.ph//file/16975c2580a14ae86fb80.jpg",
-"https://telegra.ph//file/adf0debb7f49ee82cc3a3.jpg",
-"https://telegra.ph//file/937d36ca44ef3e9b612e3.jpg",
-"https://telegra.ph//file/120d21e3df580c637545b.jpg",
-"https://telegra.ph//file/981bddd22362894ddd136.jpg", )
+➾  Tʀʏ Tᕼᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Pᴏᴡᴇʀs∘∘∘ """
 
-
-STARTG_VID = "https://telegra.ph/file/027053d6dd8510fe30adf.mp4"
+STICKERS = (
+"CAADBQADmwQAAtS8YVdsU31b5jP-RQI",
+"CAADBQADnwMAAvpPYVdGyNMYsPIfAAEC",
+"CAADBQADUgYAAqt7YFexlGia1rTFGwI",
+"CAADBQADrwYAAhrnYVctpn-VmL-PqAI",
+"CAADBQADOAUAAhFYYFcyXQOkpt1cxQI",
+"CAADBQADLwQAAvkCaVeiKoK5mVD5rAI",
+"CAADBQADVAQAAsjEYVfECLgU0DJNtAI",
+)
 
 buttons = [
     [
-                        InlineKeyboardButton(
-                            text="✙Aᴅᴅ Sᴄᴏʀʙᴜɴɴʏ",
-                            url="t.me/Scorbunnyrobot?startgroup=true"),
-                       InlineKeyboardButton(text="❤️Mʏ Sᴜᴘᴘᴏʀᴛ", url="t.me/trainer_zone"),
-                    ],
-                    [
-                       InlineKeyboardButton(text="📡Nᴇᴛᴡᴏʀᴋ", callback_data="emiko_admin"),
-                       InlineKeyboardButton(text="💬Sᴜᴘᴘᴏʀᴛs", callback_data="emiko_support"),
-                       InlineKeyboardButton(text="📝Lᴏɢs", callback_data="emiko_"),
-                   ], 
-                   [
-                       InlineKeyboardButton(
-                       text="🦋HᴀᴡᴋMᴏᴛʜ", url="https://t.me/HawkMoth_rbot?start=start"),
-                       InlineKeyboardButton(
-                       text="🎮HᴇXᴀᴍᴏɴʙᴏᴛ", url="t.me/HeXamonbot?start=qufgb9xiuwat"),
-                   ],
-                   [
-                       InlineKeyboardButton(text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
-                       InlineKeyboardButton(
-                             text="⏏️Gᴏ Iɴʟɪɴᴇ!",
-                             switch_inline_query_current_chat=""),
-                      ],
-                   ]
-
+        InlineKeyboardButton(
+            text="➕️Aᴅᴅ ᴍᴇ", url="https://t.me/CatNoir_rbot?startgroup=true"
+        ),
+    ],
+    [
+         InlineKeyboardButton(
+            text="❣️My sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"
+        ),
+    ],
+   [
+         InlineKeyboardButton(
+            text="💬Cʜɪᴛ Cʜᴀᴛ", url="https://t.me/NovusSupport"
+        ),
+    ],
+ [
+        InlineKeyboardButton(
+            text="📝Lᴏɢs", url="https://t.me/HawokLogs"
+        ),
+InlineKeyboardButton(
+            text="⏫Uᴘᴅᴀᴛᴇs", url="https://t.me/NovusUpdates"
+        ),
+    ],
+    [ 
+InlineKeyboardButton(
+            text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
+    ],
+   ]
 
 HELP_STRINGS = """
-      ◄[►𝚂𝙲𝙾𝚁𝙱𝚄𝙽𝚈◄](https://telegra.ph//file/5b4a511108e601a710d47.jpg)►      
-Hᴇʀᴇ Aʀᴇ Tʜᴇ Lɪsᴛ Cᴏᴍᴍᴀɴᴅs 
-I Cᴀɴ Pʟᴀʏ Iɴ Gʀᴏᴜᴘ Aɴᴅ Aʟsᴏ Iɴ Pᴍ.
-Iғ ғᴀᴄɪɴɢ ᴀɴʏ ɪssᴜᴇ ᴏʀ ғɪɴᴅ ᴀɴʏ ʙᴜɢs ɪɴ ᴀɴʏ ɢᴀᴍᴇ 
-ᴛʜᴇɴ ʏᴏᴜ ᴄᴀɴ ʀᴇᴘᴏʀᴛ ɪᴛ ɪɴ [Sᴜᴘᴘᴏʀᴛ](t.me/trainer_zone) Oʀ [Hᴇʀᴇ](t.me/Aryanjawale)."""
+Hi there, I'm *{}*!
+To make me functional, make sure that i have enough rights in your group.
+Helpful commands:
+- /start: Starts me! You've probably already used this.
+- /help: Sends this message; I'll tell you more about myself!
+- /donate: Gives you info on how to support me and my creator.
+If you want to report bugs or have any questions on how to use me then feel free to reach out: @ZeusSupportChat.
+All commands can be used with the following: *(/),(!),(?),(.),(~)*[!](https://telegra.ph/file/648aca75adfb9533a2161.jpg)
+List of all the Modules:
+""".format(
+    dispatcher.bot.first_name,
+    "" if not ALLOW_EXCL else "📝All commands can either be used with / or !.",
+)
 
-START_IMG = "https://telegra.ph/file/f79b676b63d44aafbd530.jpg"
+HELP_MSG = "Click the button below to get help manu in your pm."
+DONATE_STRING = """t.me/unitedsupport"""
+HELP_IMG= "https://telegra.ph/file/5f296f959250d7cd88b09.jpg"
 
-HELP_IMG = "https://telegra.ph/file/20b7e20cfcdbd441ed857.jpg"
-
-DONATE_STRING = """Heya, glad to hear you want to donate!
- You can support the project by contacting @excrybaby \
- Supporting isnt always financial! \
- Those who cannot provide monetary support are welcome to help us develop the bot at ."""
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -159,7 +161,7 @@ CHAT_SETTINGS = {}
 USER_SETTINGS = {}
 
 for module_name in ALL_MODULES:
-    imported_module = importlib.import_module("ZeusxRobot.modules." + module_name)
+    imported_module = importlib.import_module("ZeusXRobot.modules." + module_name)
     if not hasattr(imported_module, "__mod_name__"):
         imported_module.__mod_name__ = imported_module.__name__
 
@@ -214,6 +216,7 @@ def test(update: Update, context: CallbackContext):
     print(update.effective_message)
 
 
+
 def start(update: Update, context: CallbackContext):
     args = context.args
     uptime = get_readable_time((time.time() - StartTime))
@@ -229,7 +232,7 @@ def start(update: Update, context: CallbackContext):
                     update.effective_chat.id,
                     HELPABLE[mod].__help__,
                     InlineKeyboardMarkup(
-                        [[InlineKeyboardButton(text="Go Back", callback_data="help_back")]]
+                        [[InlineKeyboardButton(text="⬅Back", callback_data="help_back")]]
                     ),
                 )
 
@@ -246,34 +249,33 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-             first_name = update.effective_user.first_name
-             update.effective_message.reply_photo(
-                random.choice(MEOW_PIC),
-                PM_START_TEXT.format(
-                    escape_markdown(context.bot.first_name),
-                    escape_markdown(first_name),
-                    escape_markdown(uptime),
-                    sql.num_users(),
-                    sql.num_chats()),                        
+            update.effective_message.reply_sticker(
+                random.choice(STICKERS),
+                timeout=60,
+            )
+            update.effective_message.reply_text(
+                PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
             )
     else:
-        update.effective_message.reply_video(
-            STARTG_VID, caption= "Hᴇʏ, Sᴄᴏʀʙᴜɴɴʏ Is Hᴇʀᴇ,Cᕼᴇᴄᴋ Mᴇ Oᴜᴛ  Jᴏʜɴ Oᴜʀ Cᕼᴀɴɴᴇʟs Fᴏʀ Mᴏʀᴇ Iɴғᴏ Alive since:<code>{}</code>".format(
-                uptime
+        first_name = update.effective_user.first_name
+        update.effective_message.reply_text(
+            "*hello! {},*\n*Zeus here for you*\n*Working time* : {} ".format(
+             first_name,uptime
             ),
-            parse_mode=ParseMode.HTML,
-            reply_markup=InlineKeyboardMarkup(
+            parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(
                 [
                   [
-                  InlineKeyboardButton(text="👥Sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"),
-                  InlineKeyboardButton(text="📝Lᴏɢs", url="https://t.me/Scorbunny_logs"),
-                  ],
+                  InlineKeyboardButton(text=" Support ", url=f"t.me/{SUPPORT_CHAT}"),
+                  InlineKeyboardButton(text=" Updates ", url=f"t.me/{UPDATES_CHANNEL}"),
                   ]
+                ]
             ),
         )
+
 
 def error_handler(update, context):
     """Log the error and send a telegram message to notify the developer."""
@@ -333,6 +335,7 @@ def error_callback(update: Update, context: CallbackContext):
         # handle all other telegram related errors
 
 
+
 def help_button(update, context):
     query = update.callback_query
     mod_match = re.match(r"help_module\((.+?)\)", query.data)
@@ -346,7 +349,7 @@ def help_button(update, context):
         if mod_match:
             module = mod_match.group(1)
             text = (
-                "Here is the help for the *{}* module:\n".format(
+                "*Powered By @PegasusXteam*\n *Module Name:*`{}`\n".format(
                     HELPABLE[module].__mod_name__
                 )
                 + HELPABLE[module].__help__
@@ -356,7 +359,8 @@ def help_button(update, context):
                 parse_mode=ParseMode.MARKDOWN,
                 disable_web_page_preview=True,
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton(text="Go Back", callback_data="help_back")]]
+                    [[InlineKeyboardButton(text="⬅ Back", callback_data="help_back"),
+                      InlineKeyboardButton(text="⬅ Home", callback_data="zeus_back")]]
                 ),
             )
 
@@ -397,139 +401,53 @@ def help_button(update, context):
         pass
 
 
-def emiko_about_callback(update, context):
+
+def zeus_data_callback(update, context):
     query = update.callback_query
-    if query.data == "emiko_":
+    if query.data == "zeus_":
         query.message.edit_text(
-            text="๏ 𝚂𝚌𝚘𝚛𝚋𝚞𝚗𝚗𝚢 Lᴏɢs  [🔥](https://telegra.ph//file/d7fbfe2b08c3b0a3f0cf3.jpg) "
-             "\n𝙹𝚘𝚒𝚗 𝙰𝚞𝚛 𝙾𝚞𝚛 Lᴏɢs Fᴏʀ Aʟʟ Sᴄᴏʀʙᴜɴɴʏ Lᴏɢs...",
-             parse_mode=ParseMode.MARKDOWN,
+            text="""CallBackQueriesData Here""",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [
                  [
-                    InlineKeyboardButton(text="🦄Pᴇɢᴀsᴜs Lᴏɢs", url="https://t.me/pegasuslogs"),
-                    InlineKeyboardButton(text="👊🏻CʀᴏᴡᴅXSᴛʀɪᴋᴇ Lᴏɢs", url="https://t.me/CrowdXStrikeLogs"),
-                 ],
-                 [
-                    InlineKeyboardButton(text="⬅️Gᴏ Bᴀᴄᴋ", callback_data="emiko_back"),
-               ]
-              ]
+                    InlineKeyboardButton(text="Back", callback_data="zeus_back")
+                 ]
+                ]
             ),
         )
-    elif query.data == "emiko_back":
-        first_name = update.effective_user.first_name
-        uptime = get_readable_time((time.time() - StartTime))
+    elif query.data == "zeus_back":
         query.message.edit_text(
-                PM_START_TEXT.format(
-                    escape_markdown(context.bot.first_name),
-                    escape_markdown(first_name),
-                    escape_markdown(uptime),
-                    sql.num_users(),
-                    sql.num_chats()),
+                PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
                 disable_web_page_preview=False,
         )
-
-    elif query.data == "emiko_admin":
+    
+    
+    elif query.data == "zeus_info":
+        botuptime = get_readable_time((time.time() - StartTime))
         query.message.edit_text(
-            text="๏ 𝚂𝚌𝚘𝚛𝚋𝚞𝚗𝚗𝚢 𝙽𝚎𝚝𝚠𝚘𝚛𝚔𝚜 [🔥](https://telegra.ph//file/57204c4b4acd980bec791.jpg) "
-             "\n𝙹𝚘𝚒𝚗 𝙰𝚞𝚛 𝙾𝚞𝚛 𝙽𝚎𝚝𝚠𝚘𝚛𝚔𝚜 𝙵𝚘𝚛 𝙼𝚘𝚛𝚎 𝙱𝚘𝚝𝚜 𝙸𝚗𝚏𝚘...",
-             parse_mode=ParseMode.MARKDOWN,
+            text="*🤖 BOT* : `Alive`\n*⚡ UPTIME* : `{}`\n*💫 PYTHON* : `{}`\n🌠 PTB* : `{}`\n*🙄REPO* : `Private`\n".format(botuptime,python_version,ptbver),parse_mode=ParseMode.MARKDOWN,
             reply_markup=InlineKeyboardMarkup(
                 [
                  [
-                    InlineKeyboardButton(text="🦄Pᴇɢᴀsᴜs Nᴇᴛᴡᴏʀᴋ", url="t.me/PegasusXteam"),
-                    InlineKeyboardButton(text="🤺Yᴜɪᴄʜɪʀᴏ Nᴇᴛᴡᴏʀᴋ", url="t.me/YuichiroNetwork"),
+                    InlineKeyboardButton(text="🔄 Go Inline 🔄", switch_inline_query_current_chat=""),
+                 ],
+                  [
+                    InlineKeyboardButton(text="📢 Updates", url="t.me/PegasusUpdates"),
                  ],
                  [
-                    InlineKeyboardButton(text="⬅️Gᴏ Bᴀᴄᴋ", callback_data="emiko_back"),
-              ]
-              ]
-              ),
-        
-        )
-    elif query.data == "emiko_support":
-        query.message.edit_text(
-            text="๏ 𝚂𝚌𝚘𝚛𝚋𝚞𝚗𝚗𝚢 𝚂𝚞𝚙𝚙𝚘𝚛𝚝 𝙲𝚑𝚊𝚝𝚜 [🔥](https://telegra.ph//file/4e02b36347d670eeb7696.jpg) "
-             "\n𝙹𝚘𝚒𝚗 𝙰𝚞𝚛 𝙾𝚞𝚛 𝚂𝚞𝚙𝚙𝚘𝚛𝚝𝚜 𝙵𝚘𝚛 𝙼𝚘𝚛𝚎 𝙱𝚘𝚝𝚜 𝙸𝚗𝚏𝚘...",
-             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                 [
-                    InlineKeyboardButton(text="⚔Uɴɪᴛᴇᴅ Sᴜᴘᴘᴏʀᴛ", url="t.me/UnitedSupport"),
-                    InlineKeyboardButton(text="👊🏻CʀᴏᴡᴅXSᴛʀɪᴋᴇ", url="t.me/CrowdStrikeChat"),
-                 ],
-                 [
-                    InlineKeyboardButton(text="⬅️Gᴏ Bᴀᴄᴋ", callback_data="emiko_back"),
-               ]
-              ]
-            ),
-        )
-    elif query.data == "emiko_credit":
-        query.message.edit_text(
-            text=f"๏ Credis for Emiko\n"
-            "\nHere Developers Making The ZeusxRobot"
-            "\n\n[sena-ex](https://github.com/kennedy-ex)"
-            "\n[TheHamkerCat](https://github.com/thehamkercat)"
-            "\n[Feri](https://github.com/feriexp)"
-            "\n[riz-ex](https://github.com/riz-ex)"
-            "\n[Inuka Asith](https://github.com/inukaasith)"
-            "\n[QueenArzo](https://github.com/queenarzoo)"  
-            "\n[kittu](https://github.com/noob-kittu)"
-            "\n[Paul-Larsen](https://github.com/paulsonoflars)"
-            "\n[Kaizoku](https://github.com/animekaizoku)"
-            "\n[TheGhostHunter](https://github.com/huntingbots)",
-            parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                 [
-                    InlineKeyboardButton(text="Go Back", callback_data="emiko_"),
+                    InlineKeyboardButton(text="⬅ Back", callback_data="zeus_back"),
                  
                  ]
                 ]
             ),
         )
 
-def Source_about_callback(update, context):
-    query = update.callback_query
-    if query.data == "source_":
-        query.message.edit_text(
-            text="๏›› This advance command for Musicplayer."
-            "\n\n๏ Command for admins only."
-            "\n • `/reload` - For refreshing the adminlist."
-            "\n • `/pause` - To pause the playback."
-            "\n • `/resume` - To resuming the playback You've paused."
-            "\n • `/skip` - To skipping the player."
-            "\n • `/end` - For end the playback."
-            "\n • `/musicplayer <on/off>` - Toggle for turn ON or turn OFF the musicplayer."
-            "\n\n๏ Command for all members."
-            "\n • `/play` <query /reply audio> - Playing music via YouTube."
-            "\n • `/playlist` - To playing a playlist of groups or your personal playlist",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                 [
-                    InlineKeyboardButton(text="Go Back", callback_data="emiko_")
-                 ]
-                ]
-            ),
-        )
-    elif query.data == "source_back":
-        first_name = update.effective_user.first_name
-        query.message.edit_text(
-                PM_START_TEXT.format(
-                    escape_markdown(first_name),
-                    escape_markdown(uptime),
-                    sql.num_users(),
-                    sql.num_chats()),
-                reply_markup=InlineKeyboardMarkup(buttons),
-                parse_mode=ParseMode.MARKDOWN,
-                timeout=60,
-                disable_web_page_preview=False,
-        )
+
 
 def get_help(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
@@ -556,7 +474,7 @@ def get_help(update: Update, context: CallbackContext):
             )
             return
         update.effective_message.reply_photo(
-            HELP_IMG, caption= "«𝗪𝗮𝗻𝘁 𝗦𝗼𝗺𝗲 𝗛𝗲𝗹𝗽 𝗪𝗶𝘁𝗵 𝗧𝗵𝗲 𝗣𝗿𝗼 𝗪𝗮𝗿𝗿𝗶𝗼𝗿? 𝗖𝗼𝗺𝗲 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗠𝗲»",
+            HELP_IMG, HELP_MSG,
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
@@ -582,12 +500,12 @@ def get_help(update: Update, context: CallbackContext):
             chat.id,
             text,
             InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="Go Back", callback_data="help_back")]]
+                [[InlineKeyboardButton(text="Back", callback_data="help_back")]]
             ),
         )
 
     else:
-        send_help(chat.id,HELP_STRINGS)
+        send_help(chat.id, HELP_STRINGS)
 
 
 def send_settings(chat_id, user_id, user=False):
@@ -631,6 +549,7 @@ def send_settings(chat_id, user_id, user=False):
             )
 
 
+
 def settings_button(update: Update, context: CallbackContext):
     query = update.callback_query
     user = update.effective_user
@@ -654,7 +573,7 @@ def settings_button(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text="Go Back",
+                                text="Back",
                                 callback_data="stngs_back({})".format(chat_id),
                             )
                         ]
@@ -714,6 +633,7 @@ def settings_button(update: Update, context: CallbackContext):
             LOGGER.exception("Exception in settings buttons. %s", str(query.data))
 
 
+
 def get_settings(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     user = update.effective_user  # type: Optional[User]
@@ -745,6 +665,7 @@ def get_settings(update: Update, context: CallbackContext):
         send_settings(chat.id, user.id, True)
 
 
+
 def donate(update: Update, context: CallbackContext):
     user = update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
@@ -754,12 +675,13 @@ def donate(update: Update, context: CallbackContext):
             DONATE_STRING, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True
         )
 
-        if OWNER_ID != 1606221784:
+        if OWNER_ID != 1610284626 and DONATION_LINK:
             update.effective_message.reply_text(
-                "I'm free for everyone ❤️ If you wanna make me smile, just join"
-                "[My Channel]({})".format(DONATION_LINK),
+                "You can also donate to the person currently running me "
+                "[here]({})".format(DONATION_LINK),
                 parse_mode=ParseMode.MARKDOWN,
             )
+
     else:
         try:
             bot.send_message(
@@ -797,56 +719,37 @@ def migrate_chats(update: Update, context: CallbackContext):
     raise DispatcherHandlerStop
 
 
+
+
 def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(
-                f"@{SUPPORT_CHAT}", 
-                f"""**SCORBUNNY IS RUNNIG AGAIN[🔥](https://telegra.ph/file/f79b676b63d44aafbd530.jpg)**
-
-**Python:** `{memek()}`
-**Telegram Library:** `v{peler}`""",
-                parse_mode=ParseMode.MARKDOWN
-            )
+            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","*Zeus Is Ready ⚡*", parse_mode=ParseMode.MARKDOWN) 
         except Unauthorized:
             LOGGER.warning(
-                "Bot isnt able to send message to support_chat, go and check!"
+                "Bot isnt able to send message to support_chat, go and check!",
             )
         except BadRequest as e:
             LOGGER.warning(e.message)
 
-    test_handler = CommandHandler("test", test, run_async=True)
-    start_handler = CommandHandler("start", start, run_async=True)
 
-    help_handler = CommandHandler("help", get_help, run_async=True)
-    help_callback_handler = CallbackQueryHandler(
-        help_button, pattern=r"help_.*", run_async=True
-    )
+    start_handler = DisableAbleCommandHandler("start", start)
 
-    settings_handler = CommandHandler("settings", get_settings, run_async=True)
-    settings_callback_handler = CallbackQueryHandler(
-        settings_button, pattern=r"stngs_", run_async=True
-    )
+    help_handler = DisableAbleCommandHandler("help", get_help)
+    help_callback_handler = CallbackQueryHandler(help_button, pattern=r"help_.*")
 
-    about_callback_handler = CallbackQueryHandler(
-        emiko_about_callback, pattern=r"emiko_", run_async=True
-    )
+    settings_handler = CommandHandler("settings", get_settings)
+    settings_callback_handler = CallbackQueryHandler(settings_button, pattern=r"stngs_")
 
-    source_callback_handler = CallbackQueryHandler(
-        Source_about_callback, pattern=r"source_", run_async=True
-    )
+    data_callback_handler = CallbackQueryHandler(zeus_data_callback, pattern=r"zeus_")
+    donate_handler = CommandHandler("donate", donate)
+    migrate_handler = MessageHandler(Filters.status_update.migrate, migrate_chats)
 
-    donate_handler = CommandHandler("donate", donate, run_async=True)
-    migrate_handler = MessageHandler(
-        Filters.status_update.migrate, migrate_chats, run_async=True
-    )
-
-    dispatcher.add_handler(test_handler)
+    # dispatcher.add_handler(test_handler)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(help_handler)
-    dispatcher.add_handler(about_callback_handler)
-    dispatcher.add_handler(source_callback_handler)
+    dispatcher.add_handler(data_callback_handler)
     dispatcher.add_handler(settings_handler)
     dispatcher.add_handler(help_callback_handler)
     dispatcher.add_handler(settings_callback_handler)
@@ -865,8 +768,8 @@ def main():
             updater.bot.set_webhook(url=URL + TOKEN)
 
     else:
-        LOGGER.info("SCORBUNNY IS RUNNING 🔥")
-        updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
+        LOGGER.info("Zeus is now alive and functioning")
+        updater.start_polling(timeout=15, read_latency=4, clean=True)
 
     if len(argv) not in (1, 3, 4):
         telethn.disconnect()
@@ -876,8 +779,7 @@ def main():
     updater.idle()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
     telethn.start(bot_token=TOKEN)
-    pbot.start()
     main()
