@@ -101,9 +101,7 @@ buttons = [
         InlineKeyboardButton(
             text="➕️Aᴅᴅ ᴍᴇ", url="https://t.me/CatNoir_rbot?startgroup=true"
         ),
-    ],
-    [
-         InlineKeyboardButton(
+        InlineKeyboardButton(
             text="❣️My sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"
         ),
     ],
@@ -111,31 +109,22 @@ buttons = [
          InlineKeyboardButton(
             text="💬Cʜɪᴛ Cʜᴀᴛ", url="https://t.me/NovusSupport"
         ),
-    ],
- [
         InlineKeyboardButton(
             text="📝Lᴏɢs", url="https://t.me/HawokLogs"
         ),
-InlineKeyboardButton(
+        InlineKeyboardButton(
             text="⏫Uᴘᴅᴀᴛᴇs", url="https://t.me/NovusUpdates"
         ),
     ],
     [ 
-InlineKeyboardButton(
+        InlineKeyboardButton(
             text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
     ],
    ]
 
 HELP_STRINGS = """
-Hi there, I'm *{}*!
-To make me functional, make sure that i have enough rights in your group.
-Helpful commands:
-- /start: Starts me! You've probably already used this.
-- /help: Sends this message; I'll tell you more about myself!
-- /donate: Gives you info on how to support me and my creator.
-If you want to report bugs or have any questions on how to use me then feel free to reach out: @ZeusSupportChat.
-All commands can be used with the following: *(/),(!),(?),(.),(~)*[!](https://telegra.ph/file/648aca75adfb9533a2161.jpg)
-List of all the Modules:
+─►{} ʜᴇʟᴘ◄─
+ᴄʟɪᴄk ᴏn ᴛʜє ʙᴜᴛᴛᴏɴѕ ʙᴇʟᴏw ᴛσ ɢᴇt ᴅᴏᴄᴜᴍᴇɴᴛᴀᴛɪᴏn ᴀʙᴏᴜt ꜱᴘᴇᴄɪꜰɪc ᴍᴏᴅᴜʟᴇѕ..
 """.format(
     dispatcher.bot.first_name,
     "" if not ALLOW_EXCL else "📝All commands can either be used with / or !.",
@@ -721,7 +710,7 @@ def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","*Zeus Is Ready ⚡*", parse_mode=ParseMode.MARKDOWN) 
+            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","Pʟᴀɢɢ, [🐾](https://telegra.ph//file/7f173904c4e1147634757.mp4)Cʟᴀᴡs Oᴜᴛ!", parse_mode=ParseMode.MARKDOWN) 
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!",
