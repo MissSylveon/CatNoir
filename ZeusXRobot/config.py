@@ -17,7 +17,7 @@ class Config(object):
 
     API_ID = 4759912  # integer value, dont use ""
     API_HASH = "5bcc548f108e30a913a339a4f97f315c"
-    BOT_USERNAME = "CatNoir_rbot"
+    BOT_USERNAME = "@CatNoir_rbot"
     TOKEN = "5025924627:AAFMitA8Yn8PXPm2RikCloF1qlg5RLdG3Xc"  #This var used to be API_KEY but it is now TOKEN, adjust accordingly.
     OWNER_ID = 1323719429  # If you dont know, run the bot and do /id in your private chat with it, also an integer
     OWNER_USERNAME = "Aryanjawale"
