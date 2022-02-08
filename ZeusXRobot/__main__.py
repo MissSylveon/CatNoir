@@ -80,11 +80,11 @@ def get_readable_time(seconds: int) -> str:
 
 PM_START_TEXT = """
 ────「 CᴀᴛNᴏɪʀ 」────
-Hᴇʟʟᴏ Tʜᴇʀᴇ! 
+Hᴇʟʟᴏ {}! 
 I ᴀᴍ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
-• Uᴘᴛɪᴍᴇ: { }
-• { } ᴜsᴇʀs, ᴀᴄʀᴏss { } ᴄʜᴀᴛs.
+• Uᴘᴛɪᴍᴇ: {}
+• {} ᴜsᴇʀs, ᴀᴄʀᴏss {} ᴄʜᴀᴛs.
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
 ➢ Tʀʏ Tʜᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Aʙɪʟɪᴛɪᴇs ❃❃ """
 
@@ -248,8 +248,13 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-             update.effective_message.reply_photo(MEOW_PIC),
-                PM_START_TEXT,
+             first_name = update.effective_user.first_name
+            update.effective_message.reply_photo(
+                random.choice(MEOW_PIC),PM_START_TEXT.format(
+                    escape_markdown(first_name),
+                    escape_markdown(uptime),
+                    sql.num_users(),
+                    sql.num_chats()),                        
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
                 timeout=60,
