@@ -86,7 +86,7 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = """
-────「 CᴀᴛNᴏɪʀ 」────
+────「 [CᴀᴛNᴏɪʀ](https://telegra.ph//file/19fa1723ec7bcd0da92d9.jpg) 」────
 Hᴇʟʟᴏ {}! 
 I ᴀᴍ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
@@ -256,8 +256,8 @@ def start(update: Update, context: CallbackContext):
 
         else:
              first_name = update.effective_user.first_name
-            update.effective_message.reply_photo(
-                random.choice(MEOW_PIC),PM_START_TEXT.format(
+            update.effective_message.reply_text(
+                   PM_START_TEXT.format(
                     escape_markdown(first_name),
                     escape_markdown(uptime),
                     sql.num_users(),
