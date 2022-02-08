@@ -1,10 +1,17 @@
+import html
+import os
+import json
 import importlib
 import time
 import random
 import re
+import sys
+import traceback
+import ZeusXRobot.modules.sql.users_sql as sql
 from sys import argv
 from typing import Optional
-from platform import python_version #ZeusXRobot
+from telegram import __version__ as peler
+from platform import python_version as memek
 
 from ZeusXRobot import (
     ALLOW_EXCL,
@@ -250,8 +257,7 @@ def start(update: Update, context: CallbackContext):
         else:
              first_name = update.effective_user.first_name
             update.effective_message.reply_photo(
-                random.choice(MEOW_PIC),
-                  caption= PM_START_TEXT.format(
+                random.choice(MEOW_PIC),PM_START_TEXT.format(
                     escape_markdown(first_name),
                     escape_markdown(uptime),
                     sql.num_users(),
