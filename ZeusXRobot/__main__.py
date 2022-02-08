@@ -79,12 +79,14 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = """
-Hɪ  Tʜᴇʀᴇ!,
-𝙸 𝚊𝚖 CᴀᴛNᴏɪʀ 𝙰 𝙰𝚠𝚎𝚜𝚘𝚖𝚎 𝚐𝚛𝚘𝚞𝚙 𝚖𝚊𝚗𝚊𝚐𝚎𝚛 𝚗𝚒𝚌𝚎 𝚝𝚘 𝚖𝚎𝚎𝚝 𝚢𝚘𝚞
-
-➥Cʜᴇᴄᴋ Mʏ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs ᴀɴᴅ Mᴀᴋᴇ Yᴏᴜ Gʀᴏᴜᴘ sᴜᴘᴇʀ Fᴀɴᴛᴀsᴛɪᴄ
-
-➾Tʀʏ Tᕼᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Pᴏᴡᴇʀs∘∘∘ """
+────「 CᴀᴛNᴏɪʀ 」────
+Hᴇʟʟᴏ Tʜᴇʀᴇ! 
+I ᴀᴍ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
+➖➖➖➖➖➖➖➖➖➖➖➖➖
+• Uᴘᴛɪᴍᴇ: { }
+• { } ᴜsᴇʀs, ᴀᴄʀᴏss { } ᴄʜᴀᴛs.
+➖➖➖➖➖➖➖➖➖➖➖➖➖
+➢ Tʀʏ Tʜᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Aʙɪʟɪᴛɪᴇs ❃❃ """
 
 STICKERS = (
 "CAADBQADmwQAAtS8YVdsU31b5jP-RQI",
@@ -234,11 +236,7 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-            update.effective_message.reply_sticker(
-                random.choice(STICKERS),
-                timeout=60,
-            )
-            update.effective_message.reply_text(
+             update.effective_message.reply_text(
                 PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
