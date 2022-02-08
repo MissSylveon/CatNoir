@@ -98,6 +98,18 @@ STICKERS = (
 "CAADBQADVAQAAsjEYVfECLgU0DJNtAI",
 )
 
+MEOW_PIC = (
+"https://telegra.ph//file/75fe3db1684d504015ae9.jpg",
+"https://telegra.ph//file/df47a0b41331127da3eaa.jpg",
+"https://telegra.ph//file/192492cf23dd4fa01f362.jpg",
+"https://telegra.ph//file/02b1ffc8717d49f583f72.jpg",
+"https://telegra.ph//file/19bb96d3196f5c270ac28.jpg",
+"https://telegra.ph//file/228e59e8aa73bcd4eaa39.jpg",
+"https://telegra.ph//file/19fa1723ec7bcd0da92d9.jpg",
+"https://telegra.ph//file/d73d03141bd59a4de03c3.jpg",
+"https://telegra.ph//file/7db3a6d4fbab54b20014c.jpg",
+)
+
 buttons = [
     [
         InlineKeyboardButton(
@@ -236,7 +248,7 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-             update.effective_message.reply_text(
+             update.effective_message.reply_photo(MEOW_PIC),
                 PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
