@@ -3,8 +3,11 @@ import time
 import random
 import re
 from sys import argv
-from typing import Optional
-from platform import python_version #ZeusXRobot
+from typing import Optional 
+import ZeusXRobot.modules.sql.users_sql as sql
+from sys import argv
+from telegram import __version__ as peler
+from platform import python_version
 
 from ZeusXRobot import (
     ALLOW_EXCL,
@@ -79,14 +82,14 @@ def get_readable_time(seconds: int) -> str:
 
 
 PM_START_TEXT = """
-──『[GOD OF THUNDER](https://telegra.ph/file/4c33a90f7df190fd81763.jpg)』──
-
-*Hello User!!*
-𝐇𝐞𝐲 𝐈'𝐦 [๖ۣۜZΞUS༻](https://en.m.wikipedia.org/wiki/Zeus),👋
-𝐈 𝐀𝐦 𝐀 𝐆𝐫𝐞𝐞𝐤 𝐌𝐲𝐭𝐡𝐨𝐥𝐨𝐠𝐲 𝐆𝐨𝐝 
-𝐀𝐝𝐝 𝐌𝐞 𝐓𝐨 𝐘𝐨𝐮𝐫 𝐆𝐫𝐨𝐮𝐩 𝐈 𝐖𝐢𝐥𝐥 𝐃𝐞𝐬𝐭𝐫𝐨𝐲 𝐄𝐯𝐢𝐥𝐬 𝐖𝐢𝐭𝐡 𝐌𝐲 𝐓𝐡𝐮𝐧𝐝𝐞𝐫...
-
-──『*ᴛʜᴀɴᴋs  ғᴏʀ  ᴜsɪɴɢ*』"""
+────「 [CᴀᴛNᴏɪʀ](https://telegra.ph//file/19fa1723ec7bcd0da92d9.jpg) 」────
+Hᴇʟʟᴏ {}! 
+I ᴀᴍ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
+➖➖➖➖➖➖➖➖➖➖➖➖➖
+• Uᴘᴛɪᴍᴇ: {}
+• {} ᴜsᴇʀs, ᴀᴄʀᴏss {} ᴄʜᴀᴛs.
+➖➖➖➖➖➖➖➖➖➖➖➖➖
+➢ Tʀʏ Tʜᴇ Hᴇʟᴘ Bᴜᴛᴛᴏɴs Bᴇʟᴏᴡ Tᴏ Kɴᴏᴡ Mʏ Aʙɪʟɪᴛɪᴇs ❃❃ """
 STICKERS = (
       "CAACAgUAAx0CRiLf0wACvWBhmnKjHrrDcVgz6Ssk5wvA05NLDQACbgIAAv_H2FQTHfy_9X7rfSIE", #1
       "CAACAgUAAx0CRiLf0wACvWZhmnOJLucdVwga5fnQJ0i7tD6nIgACsAQAAq042VQYQWM0cthfbyIE", #2
@@ -95,27 +98,28 @@ STICKERS = (
 buttons = [
     [
         InlineKeyboardButton(
-                            text="☑️ SUBMIT GOD ZEUS ☑️",
-                            url="t.me/ZeusXRobot?startgroup=true"),
-                    ],
-                   [
-                       InlineKeyboardButton(text="🤖 Stats", callback_data="zeus_info"),
-                       InlineKeyboardButton(text="📊 Network", url="t.me/PegasusXteam"),
-                       InlineKeyboardButton(text="🔔 Logs", url="t.me/pegasusLogs"),
-                     ],
-                    [                  
-                       InlineKeyboardButton(
-                             text="👫 Freedom",
-                             url=f"https://t.me/UnitedSupport"),
-                       InlineKeyboardButton(
-                             text="⚡ ZeusUpdates",
-                             url=f"https://t.me/{UPDATES_CHANNEL}"),
-                     ],
-                    [
-                    InlineKeyboardButton(text="🔐 Open commads 🔐", callback_data="help_back"
-         ),
+            text="➕️Aᴅᴅ ᴍᴇ", url="https://t.me/CatNoir_rbot?startgroup=true"
+        ),
+        InlineKeyboardButton(
+            text="❣️My sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"
+        ),
     ],
-] 
+   [
+         InlineKeyboardButton(
+            text="💬Cʜɪᴛ Cʜᴀᴛ", url="https://t.me/NovusSupport"
+        ),
+        InlineKeyboardButton(
+            text="📝Lᴏɢs", url="https://t.me/HawokLogs"
+        ),
+        InlineKeyboardButton(
+            text="⏫Uᴘᴅᴀᴛᴇs", url="https://t.me/NovusUpdates"
+        ),
+    ],
+    [ 
+        InlineKeyboardButton(
+            text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
+    ],
+   ]
 
 HELP_STRINGS = """
 Hi there, I'm *{}*!
