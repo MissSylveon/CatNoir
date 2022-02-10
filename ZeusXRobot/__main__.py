@@ -111,26 +111,28 @@ MEOW_PIC = (
 buttons = [
     [
         InlineKeyboardButton(
-            text="➕️Aᴅᴅ ᴍᴇ", url="https://t.me/CatNoir_rbot?startgroup=true"
+            text="「➕️Aᴅᴅ ᴍᴇ」", url="https://t.me/CatNoir_rbot?startgroup=true"
         ),
         InlineKeyboardButton(
-            text="❣️My sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"
+            text="「❣️My sᴜᴘᴘᴏʀᴛ」", url="https://t.me/trainer_zone"
         ),
     ],
    [
          InlineKeyboardButton(
-            text="💬Cʜɪᴛ Cʜᴀᴛ", url="https://t.me/NovusSupport"
+            text="「💬Cʜɪᴛ Cʜᴀᴛ」", url="https://t.me/NovusSupport"
         ),
         InlineKeyboardButton(
-            text="📝Lᴏɢs", url="https://t.me/HawokLogs"
+            text="「📝Lᴏɢs」", url="https://t.me/HawokLogs"
         ),
         InlineKeyboardButton(
-            text="⏫Uᴘᴅᴀᴛᴇs", url="https://t.me/NovusUpdates"
+            text="「⏫Uᴘᴅᴀᴛᴇs」", url="https://t.me/NovusUpdates"
         ),
     ],
     [ 
         InlineKeyboardButton(
-            text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
+            text="「📚Cᴏᴍᴍᴀɴᴅs」", callback_data="help_back"),
+         InlineKeyboardButton(
+            text="「🎮HᴇXᴀᴍᴏɴʙᴏᴛ」", url="t.me/HeXamonbot?start=qufgb9xiuwat"),
     ],
    ]
 
@@ -771,7 +773,7 @@ def main():
             updater.bot.set_webhook(url=URL + TOKEN)
 
     else:
-        LOGGER.info("Zeus is now alive and functioning")
+        LOGGER.info("🐾Claws Out Already Check if Any error")
         updater.start_polling(timeout=15, read_latency=4, clean=True)
 
     if len(argv) not in (1, 3, 4):
