@@ -83,8 +83,8 @@ def get_readable_time(seconds: int) -> str:
 
 PM_START_TEXT = """
 ────「 [CᴀᴛNᴏɪʀ](https://telegra.ph//file/19fa1723ec7bcd0da92d9.jpg) 」────
-Hᴇʟʟᴏ {}! 
-I ᴀᴍ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
+Hᴇʟʟᴏ! 
+I ᴀᴍ CᴀᴛNᴏɪʀ ᴀɴ Aɴɪᴍᴇ ᴛʜᴇᴍᴇᴅ ᴀᴅᴠᴀɴᴄᴇ ɢʀᴏᴜᴘ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ ᴡɪᴛʜ ᴀ ʟᴏᴛ ᴏғ Aᴡᴇsᴏᴍᴇ Fᴇᴀᴛᴜʀᴇs.
 ➖➖➖➖➖➖➖➖➖➖➖➖➖
 • Uᴘᴛɪᴍᴇ: {}
 • {} ᴜsᴇʀs, ᴀᴄʀᴏss {} ᴄʜᴀᴛs.
@@ -94,6 +94,19 @@ STICKERS = (
       "CAACAgUAAx0CRiLf0wACvWBhmnKjHrrDcVgz6Ssk5wvA05NLDQACbgIAAv_H2FQTHfy_9X7rfSIE", #1
       "CAACAgUAAx0CRiLf0wACvWZhmnOJLucdVwga5fnQJ0i7tD6nIgACsAQAAq042VQYQWM0cthfbyIE", #2
 )
+
+MEOW_PIC = (
+"https://telegra.ph//file/75fe3db1684d504015ae9.jpg",
+"https://telegra.ph//file/df47a0b41331127da3eaa.jpg",
+"https://telegra.ph//file/192492cf23dd4fa01f362.jpg",
+"https://telegra.ph//file/02b1ffc8717d49f583f72.jpg",
+"https://telegra.ph//file/19bb96d3196f5c270ac28.jpg",
+"https://telegra.ph//file/228e59e8aa73bcd4eaa39.jpg",
+"https://telegra.ph//file/19fa1723ec7bcd0da92d9.jpg",
+"https://telegra.ph//file/d73d03141bd59a4de03c3.jpg",
+"https://telegra.ph//file/7db3a6d4fbab54b20014c.jpg",
+)
+
 
 buttons = [
     [
@@ -240,11 +253,8 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
-            update.effective_message.reply_sticker(
-                random.choice(STICKERS),
-                timeout=60,
-            )
-            update.effective_message.reply_text(
+             update.effective_message.reply_photo(
+                random.choice(MEOW_PIC),
                 PM_START_TEXT,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=ParseMode.MARKDOWN,
@@ -716,7 +726,7 @@ def main():
 
     if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
         try:
-            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","*Zeus Is Ready ⚡*", parse_mode=ParseMode.MARKDOWN) 
+            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}","Pʟᴀɢɢ, [🐾](https://telegra.ph//file/7f173904c4e1147634757.mp4)Cʟᴀᴡs Oᴜᴛ!", parse_mode=ParseMode.MARKDOWN) 
         except Unauthorized:
             LOGGER.warning(
                 "Bot isnt able to send message to support_chat, go and check!",
