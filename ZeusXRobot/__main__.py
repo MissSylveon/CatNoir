@@ -111,29 +111,32 @@ MEOW_PIC = (
 buttons = [
     [
         InlineKeyboardButton(
-            text="「➕️Aᴅᴅ ᴍᴇ」", url="https://t.me/CatNoir_rbot?startgroup=true"
-        ),
-        InlineKeyboardButton(
-            text="「❣️My sᴜᴘᴘᴏʀᴛ」", url="https://t.me/trainer_zone"
+            text="➕️Aᴅᴅ ᴍᴇ", url="https://t.me/CatNoir_rbot?startgroup=true"
         ),
     ],
-   [
+    [
+        InlineKeyboardButton(
+            text="🤩My sᴜᴘᴘᴏʀᴛ", url="https://t.me/trainer_zone"
+        ),
          InlineKeyboardButton(
-            text="「💬Cʜɪᴛ Cʜᴀᴛ」", url="https://t.me/NovusSupport"
+            text="💬Cʜɪᴛ Cʜᴀᴛ", url="https://t.me/NovusSupport"),
+    ],
+    [
+        InlineKeyboardButton(
+            text="📝Lᴏɢs", url="https://t.me/HawokLogs"
         ),
         InlineKeyboardButton(
-            text="「📝Lᴏɢs」", url="https://t.me/HawokLogs"
+            text="⏫Uᴘᴅᴀᴛᴇs", url="https://t.me/NovusUpdates"
         ),
-        InlineKeyboardButton(
-            text="「⏫Uᴘᴅᴀᴛᴇs」", url="https://t.me/NovusUpdates"
-        ),
+    ],
+    [
+       InlineKeyboardButton(
+            text="🎮HᴇXᴀᴍᴏɴʙᴏᴛ", url="t.me/HeXamonbot?start=qufgb9xiuwat"),
     ],
     [ 
         InlineKeyboardButton(
-            text="「📚Cᴏᴍᴍᴀɴᴅs」", callback_data="help_back"),
-         InlineKeyboardButton(
-            text="「🎮HᴇXᴀᴍᴏɴʙᴏᴛ」", url="t.me/HeXamonbot?start=qufgb9xiuwat"),
-    ],
+            text="📚Cᴏᴍᴍᴀɴᴅs", callback_data="help_back"),
+     ],
    ]
 
 HELP_STRINGS = """
